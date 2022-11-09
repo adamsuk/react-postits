@@ -1,0 +1,30 @@
+.nav {
+  padding: 16px;
+  height: 45px;
+  display: flex;
+}
+
+.nav_icon {
+  /* position: absolute; */
+  height: 45px;
+  width: 45px;
+  fill: black;
+}
+
+.nav_icon:hover {
+  fill: blue;
+}
+
+.nav_last-item {
+  margin-left: auto;
+}
+
+.nav_input {
+  height: 100%;
+  width: 200px;
+  border-radius: 8px;
+
+  padding: 12px 20px;
+  box-sizing: border-box;
+  border: 2px solid black;
+}
