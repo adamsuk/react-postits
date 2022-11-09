@@ -1,6 +1,7 @@
 .postit-container__header {
+  margin: 0;
   padding: 0;
   font-family: "Reenie Beanie";
-  font-size: 2rem;
+  font-size: 4rem;
   text-align: center;
 }

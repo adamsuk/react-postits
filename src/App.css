@@ -9,6 +9,9 @@ html, body {
   margin: 0;
   padding: 0;
   height: 100%;
+
+  background-color: white;
+  background: repeating-linear-gradient(white, white 25px, #b5b9dd 26px, #b5b9dd 27px);
 }
 
 .mainContainer {

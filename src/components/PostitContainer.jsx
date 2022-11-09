@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import withRouter from './hooks/withRouter';
-import axios from 'axios';
+import withRouter from '../hooks/withRouter';
+import { useDispatch, useSelector } from 'react-redux'
+import { getWorkspace } from '../redux/workspaceSlice'
 
 import useComponentVisible from './useComponentVisible';
 import PostIt from './Postit';
@@ -8,11 +9,11 @@ import PostIts from './Postits';
 
 import './PostitContainer.css'
 
-const REACT_APP_API_URL = process.env.REACT_APP_API_URL;
-
 const PostitContainer = ({ router: { params, navigate } }) => {
+  const dispatch = useDispatch()
+  const { data: postits, status } = useSelector((state) => state.workspace)
+
   const [loadPostits, setLoadPostits] = useState(true);
-  const [postits, setPostits] = useState([]);
   const [resetNew, setResetNew] = useState(false);
 
   const { ref, isComponentVisible } = useComponentVisible(true);
@@ -24,13 +25,17 @@ const PostitContainer = ({ router: { params, navigate } }) => {
   };
 
   useEffect(() => {
+    if (status === 204) {
+      navigate('/')
+    }
+  }, [status])
+
+  useEffect(() => {
+    dispatch(getWorkspace(params))
+  }, [dispatch, params])
+
+  useEffect(() => {
     if (loadPostits) {
-      axios.get(`${REACT_APP_API_URL}/api/v1/workspace/${params.workspaceId}`).then((res) => {
-        if (res.status === 204) {
-          navigate('/')
-        }
-        setPostits(res.data);
-      });
       setLoadPostits(false);
       setResetNew(true);
     } else {
@@ -40,9 +45,7 @@ const PostitContainer = ({ router: { params, navigate } }) => {
 
   return (
     <>
-      <div className="postit-container__header">
-        <h1>Simple Post-its</h1>
-      </div>
+      <h1 className="postit-container__header">Simple Post-its</h1>
       <div ref={ref}>
         <PostIt
           callback={() => setLoadPostits(true)}
@@ -53,7 +56,7 @@ const PostitContainer = ({ router: { params, navigate } }) => {
           {...params}
         />
       </div>
-      <PostIts postits={postits} {...params} callback={() => setLoadPostits(true)} />
+      <PostIts postits={postits} {...params} />
     </>
   );
 };

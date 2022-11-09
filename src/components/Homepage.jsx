@@ -1,24 +1,27 @@
-import React from 'react';
-import withRouter from './hooks/withRouter';
-import axios from 'axios';
+import React, { useEffect } from 'react';
+import withRouter from '../hooks/withRouter';
+import { useDispatch, useSelector } from 'react-redux'
+import { postWorkspace } from '../redux/workspaceSlice'
 
 import './Homepage.css'
 
-const REACT_APP_API_URL = process.env.REACT_APP_API_URL;
-
 const Homepage = ({ router: { navigate }}) => {
+  const dispatch = useDispatch()
+  const { id: workspaceId, status } = useSelector((state) => state.workspace)
+
   const initPostit = {
     title: 'Welcome to Simple Post-its',
     description: 'Just Click Me to Start a Workspace!'
   }
 
+  useEffect(() => {
+    if (status === 200 && workspaceId) {
+      navigate(`/${workspaceId}`)
+    }
+  }, [status, workspaceId])
+
   const createWorkspace = () => {
-    axios.post(`${REACT_APP_API_URL}/api/v1/workspace`).then((res) => {
-      console.log(res)
-      if (res.status === 200 && res.data?.id) {
-        navigate(`/${res.data.id}`)
-      }
-    });
+    dispatch(postWorkspace())
   }
 
   return (

@@ -5,9 +5,9 @@ import {
   Route,
 } from "react-router-dom";
 
-import Nav from './Nav';
-import Homepage from './Homepage';
-import PostitContainer from './PostitContainer';
+import Nav from './components/Nav';
+import Homepage from './components/Homepage';
+import PostitContainer from './components/PostitContainer';
 
 import './App.css';
 

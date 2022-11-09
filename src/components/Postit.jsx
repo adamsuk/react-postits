@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux'
+import { save, update, remove } from '../redux/workspaceSlice'
+import { postPostit, patchPostit, deletePostit } from '../redux/postitSlice'
+
 import classNames from 'classnames';
 import TextareaAutosize from 'react-textarea-autosize';
 import { omit, isEqual } from 'lodash';
@@ -8,8 +11,6 @@ import { IoMdCloseCircleOutline } from 'react-icons/io';
 import useComponentVisible from './useComponentVisible';
 
 import './Postit.css';
-
-const REACT_APP_API_URL = process.env.REACT_APP_API_URL;
 
 const Postit = ({
   postit,
@@ -21,6 +22,7 @@ const Postit = ({
   omitKeys = ['id', 'created_at', 'updated_at'],
   workspaceId
 }) => {
+  const dispatch = useDispatch()
   const [currentPostit, setCurrentPostit] = useState(omit(postit, omitKeys));
   const [focusNewPostit, setFocusNewPostit] = useState(false);
   const { ref, isComponentVisible } = useComponentVisible(false);
@@ -39,25 +41,13 @@ const Postit = ({
     if (prevFocus && !isComponentVisible) {
       // has the postit changed?
       if (!isEqual(currentPostit, omit(postit, omitKeys))) {
-
-        console.log(currentPostit)
         // new or edit?
         if (newPostit) {
-          axios.post(`${REACT_APP_API_URL}/api/v1/postit`, {
-            ...currentPostit,
-            workspace_id: workspaceId
-          }).then((res) => {
-            console.log('Postit SENT');
-            console.log(res);
-          });
+          dispatch(save(currentPostit))
+          dispatch(postPostit({currentPostit, workspaceId}))
         } else {
-          axios.patch(`${REACT_APP_API_URL}/api/v1/postit/${postit.id}`, {
-            ...currentPostit,
-            workspace_id: workspaceId
-          }).then((res) => {
-            console.log(`Postit ${postit.id} UPDATED`);
-            console.log(res);
-          });
+          dispatch(update({...currentPostit, id: postit.id}))
+          dispatch(patchPostit({postit, currentPostit, workspaceId}))
         }
         if (newPostit && callback) {
           callback();
@@ -66,11 +56,9 @@ const Postit = ({
     }
   }, [isComponentVisible]);
 
-  const deletePostit = () => {
-    axios.delete(`${REACT_APP_API_URL}/api/v1/postit/${postit.id}`).then((res) => {
-      console.log('Postit DELETED');
-      console.log(res);
-    });
+  const handleDeletePostit = () => {
+    dispatch(remove(postit))
+    dispatch(deletePostit({postit}))
     if (callback) {
       callback();
     }
@@ -84,9 +72,8 @@ const Postit = ({
           'postit__new-postit-focus': focusNewPostit & !hide
         })}
         onClick={() => (newPostit ? setFocusNewPostit(true) : null)}
-        // onSubmit={handleSubmit}
       >
-        {!newPostit && <IoMdCloseCircleOutline onClick={deletePostit} className="postit-close" />}
+        {!newPostit && <IoMdCloseCircleOutline onClick={handleDeletePostit} className="postit-close" />}
         <TextareaAutosize
           className="postit-title"
           type="text"
