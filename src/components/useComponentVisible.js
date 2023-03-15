@@ -1,7 +1,6 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
-const useComponentVisible = (initialIsVisible) => {
-  const [isComponentVisible, setIsComponentVisible] = useState(initialIsVisible);
+const useComponentVisible = (setIsComponentVisible) => {
   const ref = useRef(null);
 
   const handleClickOutside = (event) => {
@@ -19,7 +18,7 @@ const useComponentVisible = (initialIsVisible) => {
     };
   }, []);
 
-  return { ref, isComponentVisible, setIsComponentVisible };
+  return ref;
 }
 
 export default useComponentVisible;

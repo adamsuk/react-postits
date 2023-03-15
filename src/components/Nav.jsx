@@ -13,20 +13,21 @@ const Nav = () => {
   const handleSubmit = (e) => navigate(`/${workspace}`)
 
   return (
-    <div className='nav'>
-      <Link to='/' >
-        <AiFillHome className='nav_icon' />
-      </Link>
-      <form className='nav_last-item' onSubmit={handleSubmit} >
-        <input
-          className="nav_input"
-          type="text"
-          name='workspace-input'
-          value={workspace}
-          onChange={handleChange}
-          placeholder='Workspace No.'
-        />
-      </form>
+    <div className="nav_container">
+      <div className='nav'>
+        <Link to='/' >
+          <AiFillHome className='nav_icon' />
+        </Link>
+        <form className='nav_last-item' onSubmit={handleSubmit} >
+          <input
+            className="nav_input"
+            type="text"
+            value={workspace}
+            onChange={handleChange}
+            placeholder='Workspace No.'
+          />
+        </form>
+      </div>
     </div>
   )
 }

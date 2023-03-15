@@ -3,18 +3,18 @@
   display: flex;
   justify-content: center;
   align-items: center;
+
+  container-type: inline-size;
 }
 
 .homepage__postit-title {
   font-family: 'Lato';
   /* font-family: "Reenie Beanie"; */
   font-weight: bold;
-  font-size: 3rem;
 }
 
 .homepage__postit-description {
   font-family: 'Reenie Beanie';
-  font-size: 3rem;
 }
 
 .homepage__postit {
@@ -23,11 +23,11 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  font-size: 3rem;
 
   text-decoration: none;
   color: #000;
   background: #ffc;
-  /* display: block; */
   min-height: 350px;
   max-width: 500px;
   min-width: 50px;
@@ -54,4 +54,10 @@
 
   user-select: none;
   text-align: center;
+}
+
+@container (width < 400px) {
+  .homepage__postit {
+    font-size: 2rem;
+  }
 }

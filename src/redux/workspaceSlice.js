@@ -26,20 +26,20 @@ export const workspaceSlice = createSlice({
   reducers: {
     save: (state, param) => {
       const { payload } = param;
-      state.data = [...state.data, {...payload, id: uuidv4()}];
+      state.data.postits = [...state.data.postits, {...payload, id: uuidv4()}];
     },
     update: (state, params) => {
       const { payload } = params;
-      const i = state.data.findIndex((el) => el.id === payload.id)
+      const i = state.data.postits.findIndex((el) => el.id === payload.id)
       if (i !== -1) {
-        state.data[i] = payload
+        state.data.postits[i] = payload
       }
     },
     remove: (state, params) => {
       const { payload } = params;
-      const i = state.data.findIndex((el) => el.id === payload.id)
+      const i = state.data.postits.findIndex((el) => el.id === payload.id)
       if (i !== -1) {
-        state.data.splice(i, 1)
+        state.data.postits.splice(i, 1)
       }
     }
   },

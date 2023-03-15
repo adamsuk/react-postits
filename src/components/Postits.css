@@ -39,3 +39,9 @@
   position: relative;
   top: -10px;
 }
+
+@container (width < 400px) {
+  .postits {
+    margin: 0;
+  }
+}

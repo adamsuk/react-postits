@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { save, update, remove } from '../redux/workspaceSlice'
 import { postPostit, patchPostit, deletePostit } from '../redux/postitSlice'
 
@@ -19,20 +19,21 @@ const Postit = ({
   newPostit = false,
   resetNewPostit = false,
   hide = true,
+  setHide,
   omitKeys = ['id', 'created_at', 'updated_at'],
   workspaceId
 }) => {
   const dispatch = useDispatch()
   const [currentPostit, setCurrentPostit] = useState(omit(postit, omitKeys));
-  const [focusNewPostit, setFocusNewPostit] = useState(false);
-  const { ref, isComponentVisible } = useComponentVisible(false);
+  const [isComponentVisible, setIsComponentVisible] = useState(false);
+  const ref = useComponentVisible(setIsComponentVisible);
   const [prevFocus, setPrevFocus] = useState(false);
 
   useEffect(() => {
     if (newPostit && resetNewPostit) {
       setCurrentPostit(omit(postit, omitKeys));
     }
-  }, [resetNewPostit]);
+  }, [resetNewPostit, newPostit, postit, omitKeys]);
 
   // autosave
   useEffect(() => {
@@ -65,19 +66,16 @@ const Postit = ({
   }
 
   return (
-    <div ref={ref}>
-      <form
-        className={classNames(className, 'postit', {
-          'postit__new-postit': newPostit,
-          'postit__new-postit-focus': focusNewPostit & !hide
-        })}
-        onClick={() => (newPostit ? setFocusNewPostit(true) : null)}
-      >
+    <div ref={ref} className={classNames(className, 'postit', {
+      'postit__new-postit': newPostit,
+      'postit__new-postit-focus': newPostit && !hide
+    })}>
+      <form onClick={() => (newPostit ? setHide(true) : null)}>
         {!newPostit && <IoMdCloseCircleOutline onClick={handleDeletePostit} className="postit-close" />}
         <TextareaAutosize
           className="postit-title"
           type="text"
-          placeholder={!newPostit || focusNewPostit & !hide ? 'Some catchy title' : ''}
+          placeholder={!newPostit || !hide ? 'Some catchy title' : ''}
           maxLength="75"
           value={currentPostit.title}
           onChange={(e) => setCurrentPostit({ ...currentPostit, title: e.target.value })}
@@ -85,7 +83,7 @@ const Postit = ({
         <TextareaAutosize
           className="postit-description"
           type="text"
-          placeholder={!newPostit || focusNewPostit & !hide ? 'What you want to write ...' : ''}
+          placeholder={!newPostit || !hide ? 'What you want to write ...' : ''}
           minRows={6}
           value={currentPostit.description}
           onChange={(e) => setCurrentPostit({ ...currentPostit, description: e.target.value })}

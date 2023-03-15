@@ -58,9 +58,10 @@ input[type='text'] {
 
 .postit__new-postit {
   border: 3px double orange;
+  display: inline-block;
   position: fixed;
-  right: -50px;
-  bottom: -200px;
+  right: -250px;
+  /* top: calc(100% + 200px); */
   z-index: 99;
 }
 
@@ -80,4 +81,24 @@ input[type='text'] {
 .postit:focus .postit-close,
 .postit:hover .postit-close {
   display: block;
+}
+
+@container (width < 400px) {
+  .postit {
+    transform: unset;
+  }
+
+  .postit-title {
+    font-size: 1.5rem;
+  }
+
+  .postit-description {
+    font-size: 1.5rem;
+  }
+}
+
+@container (width < 700px) {
+  .postit__new-postit {
+    right: -500px;
+  }
 }
